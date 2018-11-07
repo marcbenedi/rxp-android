@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import java.util.HashMap;
 
+import okhttp3.OkHttpClient;
+
 /**
  * The main object the host app creates.
 
@@ -49,6 +51,8 @@ public class HPPManager extends HPPResponse {
 
     //Supplementary data to be sent to Realex Payments. This will be returned in the HPP response.
     private HashMap<String, String> supplementaryData = new HashMap<String, String>();
+
+    private OkHttpClient okHttpClient = null;
 
 
     public static boolean isLightBox() {
@@ -106,6 +110,14 @@ public class HPPManager extends HPPResponse {
      */
     public void setHppURL(String hppURL) {
         this.hppURL = hppURL;
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    public void setOkHttpClient(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
     }
 
     /**
@@ -172,7 +184,8 @@ public class HPPManager extends HPPResponse {
      * @return Fragment that present payment form
      */
     public Fragment newInstance() {
-        HPPManagerFragment fragment = new HPPManagerFragment();
+        HPPManagerFragment fragment = HPPManagerFragment.newInstance(okHttpClient);
+
         Bundle args = new Bundle();
 
         args.putString(HPPREQUEST_PRODUCER_URL, hppRequestProducerURL);
@@ -240,4 +253,5 @@ public class HPPManager extends HPPResponse {
     public void setSupplementaryData(String key, String value) {
         supplementaryData.put(key,value);
     }
+
 }

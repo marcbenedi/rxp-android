@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -59,9 +60,18 @@ public class HPPManagerFragment extends Fragment implements Callback<Response> {
     private View root;
     private HPPManager hppManager;
     private boolean isResultReceived = false;
+    private OkHttpClient okHttpClient;
 
-    public HPPManagerFragment() {
+    public static HPPManagerFragment newInstance(OkHttpClient okHttpClient){
+        HPPManagerFragment fragment = new HPPManagerFragment();
+        fragment.setOkHttpClient(okHttpClient);
+        return fragment;
     }
+
+    private void setOkHttpClient(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +99,7 @@ public class HPPManagerFragment extends Fragment implements Callback<Response> {
 
                 HashMap<String, String> parameters = hppManager.getMap();
 
-                ApiAdapter.getAdapter(getHostPath(hppManager.getHppRequestProducerURL())).getHPPRequest(getRelativePathEncoded(hppManager.getHppRequestProducerURL()), parameters, this);
+                ApiAdapter.getAdapter(getHostPath(hppManager.getHppRequestProducerURL()), okHttpClient).getHPPRequest(getRelativePathEncoded(hppManager.getHppRequestProducerURL()), parameters, this);
 
             } else {
 
@@ -293,7 +303,7 @@ public class HPPManagerFragment extends Fragment implements Callback<Response> {
         if (!isResultReceived && data.length() > 0) {
             isResultReceived = true;
 
-            ApiAdapter.getAdapter(getHostPath(hppManager.getHppResponseConsumerURL())).getConsumerRequest(getRelativePathEncoded(hppManager.getHppResponseConsumerURL()),
+            ApiAdapter.getAdapter(getHostPath(hppManager.getHppResponseConsumerURL()), okHttpClient).getConsumerRequest(getRelativePathEncoded(hppManager.getHppResponseConsumerURL()),
                     data, new Callback<Response>() {
                         @Override
                         public void success(Response s, Response response) {
