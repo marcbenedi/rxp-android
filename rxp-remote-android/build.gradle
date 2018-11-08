@@ -1,5 +1,15 @@
 apply plugin: 'com.android.library'
 
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '28.0.3'
@@ -20,7 +30,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:23.1.1'
 }
